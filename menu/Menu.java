@@ -18,7 +18,7 @@ public abstract class Menu
         }
     }
 
-    private void display()
+    protected void display()
     {
         for (String option : options.values())
         {
@@ -37,16 +37,25 @@ public abstract class Menu
     {
         char input;
         boolean isValidInput;
+        System.out.print("Please enter your selection...\n> ");
         do
         {
-            System.out.print("> ");
-            input = inputScanner.nextLine().toUpperCase().charAt(0);
+            try 
+            {
+                input = inputScanner.nextLine().toUpperCase().charAt(0);
+            } catch (Exception e) 
+            {
+                input = ' ';
+            }
             isValidInput = (options.containsKey(input) ? true : false);
-            if (!isValidInput) System.out.println("Invalid entry, please try again...");
+            if (!isValidInput)
+            {   
+                System.out.print("\033[2F\033[0J");
+                System.out.print("Invalid entry, please try again...\n>");
+            }
         } while (!isValidInput);
         return input;
     }
-
     
     public static void waitForEnter()
     {
@@ -60,5 +69,29 @@ public abstract class Menu
         System.out.flush();
     }
     
+    public static boolean askYesNo(String question)
+    {
+        char input;
+        boolean isValid = true;
+        do
+        {
+            System.out.print(question + " (Y/N): ");
+            try 
+            {
+                input = inputScanner.nextLine().toUpperCase().charAt(0);                
+            } 
+            catch (Exception e) 
+            {
+                input = ' ';
+            }
+            isValid = (input == 'Y' || input == 'N');
+            if (!isValid)
+            {
+                System.out.print("\033[1F\033[0J");
+            }
+        } while (!isValid);
+        return input == 'Y';
+    }
+
     abstract protected void processInput(char input);
 }
