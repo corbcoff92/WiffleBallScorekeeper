@@ -16,11 +16,13 @@ This software was written to assist & demonstrate the learning of the basics of 
 * [JDK 17 Documentation](https://docs.oracle.com/en/java/javase/17/index.html) (Official Site)
 
 # Future Work
+* Documentation
+    * Document comments for javadoc
+    * Code comments
 * Keep track of hits and walks during game
 * Add Team class for additional support such as: 
     * team names
 * Organization including additional classes and possibly packages
-* Documentation
-    * Document comments for javadoc
-    * Code comments
 * Ability to save games for later
+* Undo button
+* Final game display

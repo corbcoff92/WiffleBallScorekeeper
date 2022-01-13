@@ -36,7 +36,6 @@ public class Game
         if (count.checkWalk())
         {
             message = "Walk";
-            pitchingTeam.walkBatter();
             advanceRunnersWalk();
         }
     }
@@ -88,6 +87,7 @@ public class Game
             i++;
         }
         runners.addFirst(1);
+        pitchingTeam.walkBatter();
         checkRunnersScored();
         count.reset();
     }
