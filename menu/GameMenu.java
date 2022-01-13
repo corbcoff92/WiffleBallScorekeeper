@@ -40,7 +40,7 @@ public class GameMenu
                     currentMenu = outMenu;
                     break;
                 case 'Q':
-                    quit = true;
+                    quit = askYesNo("Are you sure you want to quit?");
                     break;
             }
         }

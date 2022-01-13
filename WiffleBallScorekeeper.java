@@ -11,6 +11,13 @@ final class WiffleBallScoreKeeper
         {
             super("N - New Game", "Q - Quit");
         }
+
+        protected void display()
+        {
+            System.out.println("Main Menu");
+            super.display();
+        }
+
         protected void processInput(char input)
         {
             switch (input)
