@@ -11,7 +11,6 @@ final class WiffleBallScoreKeeper
         {
             super("N - New Game", "Q - Quit");
         }
-
         protected void processInput(char input)
         {
             switch (input)
