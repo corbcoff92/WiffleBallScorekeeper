@@ -8,8 +8,10 @@ public class Game
     private int inning;
     boolean isTopOfInning;
     private Count count;
-    private int homeScore;
-    private int awayScore;
+    private Team homeTeam = new Team("HOME");
+    private Team awayTeam = new Team("AWAY");
+    private Team battingTeam;
+    private Team pitchingTeam;
     private int outs;
     private LinkedList <Integer> runners;
     String message;
@@ -21,8 +23,8 @@ public class Game
         isTopOfInning = true;
         count = new Count();
         outs = 0;
-        homeScore = 0;
-        awayScore = 0;
+        battingTeam = awayTeam;
+        pitchingTeam = homeTeam;
         message = "Play Ball!";
         runners = new LinkedList<Integer>();
     }
@@ -34,6 +36,7 @@ public class Game
         if (count.checkWalk())
         {
             message = "Walk";
+            pitchingTeam.walkBatter();
             advanceRunnersWalk();
         }
     }
@@ -66,7 +69,7 @@ public class Game
                 message = (runners.size() != 3 ? "Homerun" : "Grand Slam");
                 break;
         }
-
+        battingTeam.hit();
         for (int i = 0; i < runners.size(); i++)
         {
             runners.set(i, runners.get(i) +numBases);
@@ -95,7 +98,7 @@ public class Game
         while (!runners.isEmpty() && runners.getLast() >= 4)
         {
             runsScored++;
-            if (isTopOfInning) awayScore++; else homeScore++;
+            battingTeam.scoreRun();
             runners.removeLast();
         }
         if (runsScored > 0)
@@ -134,12 +137,16 @@ public class Game
         if (isTopOfInning)
         {
             isTopOfInning = false;
+            battingTeam = homeTeam;
+            pitchingTeam = awayTeam;
             message = "Switch sides";
         }
         else
         {
-            inning++;
             isTopOfInning = true;
+            inning++;
+            battingTeam = awayTeam;
+            pitchingTeam = homeTeam;
             message = (inning != NUM_INNINGS + 1 ? "Next inning" : "Extra Innings!");
         }
         runners.clear();
@@ -151,7 +158,7 @@ public class Game
         {
             if (isTopOfInning)
             {
-                if (outs >= 3 && homeScore > awayScore)
+                if (outs >= 3 && homeTeam.getRuns() > awayTeam.getRuns())
                 {
                     isGameOver = true;
                     message = "Home Team has won!";
@@ -159,14 +166,14 @@ public class Game
             }
             else
             {
-                if (homeScore > awayScore)
+                if (homeTeam.getRuns() > awayTeam.getRuns())
                 {
                     isGameOver = true;
                     message = "Walkoff " + message.split(",")[0] + ", Home Team has won!"; 
                 }
                 else
                 {
-                    if (outs >= 3 && homeScore < awayScore)
+                    if (outs >= 3 && homeTeam.getRuns() < awayTeam.getRuns())
                     {
                         isGameOver = true;
                         message = "Away Team has won!"; 
@@ -181,9 +188,9 @@ public class Game
         char first = (runners.contains(1) ? 'X' : 'O');
         char second = (runners.contains(2) ? 'X' : 'O');
         char third = (runners.contains(3) ? 'X' : 'O');
-        System.out.println(((isTopOfInning ? "TOP " : "BOT ") + inning) + "   R  " + "|  " + second + "  |");
-        System.out.println("AWAY\t" + awayScore + "  " + "|" + third + "   " + first + "|");
-        System.out.println("HOME\t" + homeScore + "  |  O  |");
+        System.out.println(((isTopOfInning ? "TOP " : "BOT ") + inning) + "   R  H  W  " + "|  " + second + "  |");
+        System.out.println("AWAY\t" + awayTeam.getRuns() + "  " + awayTeam.getHits() + "  " + awayTeam.getWalks() + "  |" + third + "   " + first + "|");
+        System.out.println("HOME\t" + homeTeam.getRuns() + "  " + homeTeam.getHits() + "  " + homeTeam.getWalks() +"  |  O  |");
         System.out.println(count.getDisplayString() + ", " + outs + (outs != 1 ? " outs" : " out"));
         System.out.println(message);
     }
@@ -191,7 +198,7 @@ public class Game
     public void displayFinal()
     {
         System.out.println(inning <= NUM_INNINGS ? "FINAL" : "FIN/" + inning);
-        System.out.println("AWAY\t" + awayScore);
-        System.out.println("HOME\t" + homeScore);
+        System.out.println("AWAY\t" + awayTeam.getRuns());
+        System.out.println("HOME\t" + homeTeam.getRuns());
     }
 }
