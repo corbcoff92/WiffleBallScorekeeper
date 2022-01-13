@@ -12,7 +12,6 @@ public class Game
     private int awayScore;
     private int outs;
     private LinkedList <Integer> runners;
-    boolean possibleWalkoff;
     String message;
     public boolean isGameOver = false;
         
@@ -25,7 +24,6 @@ public class Game
         homeScore = 0;
         awayScore = 0;
         message = "Play Ball!";
-        possibleWalkoff = false;
         runners = new LinkedList<Integer>();
     }
     
@@ -36,7 +34,6 @@ public class Game
         if (count.checkWalk())
         {
             message = "Walk";
-            count.reset();
             advanceRunnersWalk();
         }
     }
@@ -47,7 +44,6 @@ public class Game
         message = "Strike";      
         if (count.checkStrikeout())
         {
-            count.reset();
             message = "Struckout";
             outMade();
         }
@@ -79,7 +75,7 @@ public class Game
         checkRunnersScored();
         count.reset();
     }
-
+    
     private void advanceRunnersWalk()
     {
         int i = 0;
@@ -90,6 +86,7 @@ public class Game
         }
         runners.addFirst(1);
         checkRunnersScored();
+        count.reset();
     }
     
     private void checkRunnersScored()
@@ -138,7 +135,6 @@ public class Game
         {
             isTopOfInning = false;
             message = "Switch sides";
-            if (inning == NUM_INNINGS) possibleWalkoff = true;
         }
         else
         {
@@ -166,15 +162,10 @@ public class Game
                 if (homeScore > awayScore)
                 {
                     isGameOver = true;
-                    if (possibleWalkoff)
-                    {
-                        message = "Walkoff " + message.split(",")[0] + ", Home Team has won!"; 
-                    }
+                    message = "Walkoff " + message.split(",")[0] + ", Home Team has won!"; 
                 }
                 else
                 {
-                    if (!possibleWalkoff) possibleWalkoff = true;
-
                     if (outs >= 3 && homeScore < awayScore)
                     {
                         isGameOver = true;
