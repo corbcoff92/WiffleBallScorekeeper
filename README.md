@@ -19,13 +19,6 @@ This software was written to assist & demonstrate the learning of the basics of 
 * Documentation
     * Document comments for javadoc
     * Code comments
-* Keep track of hits and walks during game
-* Add Team class for additional support such as: 
-    * team names
-* Organization including additional classes and possibly packages
 * Ability to save games for later
 * Undo button
 * Final game display
-
-# Issues
-* Empty input crashes program
