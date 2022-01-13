@@ -8,25 +8,31 @@ public class Game
     private int inning;
     boolean isTopOfInning;
     private Count count;
-    private Team homeTeam = new Team("HOME");
-    private Team awayTeam = new Team("AWAY");
+    private Team homeTeam;
+    private Team awayTeam;
     private Team battingTeam;
     private Team pitchingTeam;
     private int outs;
     private LinkedList <Integer> runners;
     String message;
     public boolean isGameOver = false;
-        
+    private int namePadding;
+    int currentInningRuns;
+    
     public Game()
     {
         inning = 1;
         isTopOfInning = true;
         count = new Count();
         outs = 0;
+        awayTeam = new Team("AWAY");
+        homeTeam = new Team("HOME");
         battingTeam = awayTeam;
         pitchingTeam = homeTeam;
         message = "Play Ball!";
         runners = new LinkedList<Integer>();
+        namePadding = Math.max(awayTeam.name.length(), homeTeam.name.length());
+        battingTeam.inningsRunsScored.add(0);
     }
     
     public void callBall()
@@ -50,25 +56,25 @@ public class Game
             outMade();
         }
     }
-
+    
     public void advanceRunnersHit(int numBases)
     {
         switch (numBases)
         {
             case 1:
-                message = "Single";
+            message = "Single";
                 break;
-            case 2:
+                case 2:
                 message = "Double";
                 break;
-            case 3:
+                case 3:
                 message = "Triple";
                 break;
-            case 4:
+                case 4:
                 message = (runners.size() != 3 ? "Homerun" : "Grand Slam");
                 break;
-        }
-        battingTeam.hit();
+            }
+            battingTeam.hit();
         for (int i = 0; i < runners.size(); i++)
         {
             runners.set(i, runners.get(i) +numBases);
@@ -107,19 +113,19 @@ public class Game
         }
         checkGameOver();
     }
-
+    
     public void flyOut()
     {
         message = "Flyout";
         outMade();
     }
-
+    
     public void groundOut()
     {
         message = "Groundout";
         outMade();
     }
-
+    
     private void outMade()
     {
         outs++;
@@ -150,6 +156,7 @@ public class Game
             message = (inning != NUM_INNINGS + 1 ? "Next inning" : "Extra Innings!");
         }
         runners.clear();
+        battingTeam.inningsRunsScored.add(0);
     }
     
     private void checkGameOver()
@@ -182,23 +189,58 @@ public class Game
             }
         } 
     }
-            
+    
     public void display()
     {
         char first = (runners.contains(1) ? 'X' : 'O');
         char second = (runners.contains(2) ? 'X' : 'O');
         char third = (runners.contains(3) ? 'X' : 'O');
-        System.out.println(((isTopOfInning ? "TOP " : "BOT ") + inning) + "   R  H  W  " + "|  " + second + "  |");
-        System.out.println("AWAY\t" + awayTeam.getRuns() + "  " + awayTeam.getHits() + "  " + awayTeam.getWalks() + "  |" + third + "   " + first + "|");
-        System.out.println("HOME\t" + homeTeam.getRuns() + "  " + homeTeam.getHits() + "  " + homeTeam.getWalks() +"  |  O  |");
+        String inningText = (isTopOfInning ? "TOP " : "BOT ") + inning;
+        System.out.println(String.format("%-" + namePadding + "s  R  H  W  |  %c  |", inningText, second));
+        System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |%c   %c|", awayTeam.name, awayTeam.getRuns(), awayTeam.getHits(), awayTeam.getWalks(), third, first));
+        System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |  O  |", homeTeam.name, homeTeam.getRuns(), homeTeam.getHits(), homeTeam.getWalks(), third, first));
         System.out.println(count.getDisplayString() + ", " + outs + (outs != 1 ? " outs" : " out"));
         System.out.println(message);
-    }
+    } 
 
     public void displayFinal()
     {
-        System.out.println(inning <= NUM_INNINGS ? "FINAL" : "FIN/" + inning);
-        System.out.println("AWAY\t" + awayTeam.getRuns());
-        System.out.println("HOME\t" + homeTeam.getRuns());
+        String headingText = (inning <= NUM_INNINGS ? "FINAL" : "FIN/" + inning);
+        headingText = String.format("%-" + namePadding + "s  | ", headingText);
+        for (int i = 1; i <= awayTeam.inningsRunsScored.size(); i++)
+        {
+            headingText += (String.format("%-2d ",i));
+        }
+        headingText += "|R  H  W";
+        
+        String spacingString = "";
+        for (int i = 0; i < headingText.length(); i++) 
+        {
+            spacingString += '-';
+        }
+        
+        String awayString = String.format("%-" + namePadding + "s   | ", awayTeam.name);
+        String homeString = String.format("%-" + namePadding + "s   | ", homeTeam.name);
+        for (int i=0; i < awayTeam.inningsRunsScored.size(); i++)
+        {
+            awayString += String.format("%-2d ",awayTeam.inningsRunsScored.get(i));
+            if (i < homeTeam.inningsRunsScored.size())
+            {
+                homeString += String.format("%-2d ",homeTeam.inningsRunsScored.get(i));
+            }
+            else
+            {
+                homeString += "-  ";
+            }
+        }
+        awayString += String.format("|%-2d %-2d %-2d", awayTeam.getRuns(), awayTeam.getHits(), awayTeam.getWalks());
+        homeString += String.format("|%-2d %-2d %-2d", homeTeam.getRuns(), homeTeam.getHits(), homeTeam.getWalks());
+        
+        System.out.println(headingText);
+        System.out.println(spacingString);
+        System.out.println(awayString);
+        System.out.println(homeString);
+        System.out.println(spacingString);
+        System.out.println("");
     }
 }

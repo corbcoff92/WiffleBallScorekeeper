@@ -21,4 +21,3 @@ This software was written to assist & demonstrate the learning of the basics of 
     * Code comments
 * Ability to save games for later
 * Undo button
-* Final game display
