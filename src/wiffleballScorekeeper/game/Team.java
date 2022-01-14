@@ -41,14 +41,14 @@ class Team
     private LinkedList<Integer> runsPerInning;
     
     /**
-     * Initializes a new blank Team with the given default name. This team's runs, hits, and walks 
+     * Initializes a new blank Team with the given name. This team's runs, hits, and walks 
      * are set to zero. The {@code inningsRunsScored} begins as an empty list, so {@link newInning} 
      * should be called for the first team at the beginning of the game. 
      * @param defaultName
      */
-    public Team(String defaultName)
+    public Team(String name)
     {
-        name = defaultName;
+        this.name = name;
         runs = 0;
         hits = 0;
         walks = 0;

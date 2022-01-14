@@ -93,5 +93,22 @@ public abstract class Menu
         return input == 'Y';
     }
 
+    public static String getTeamName(String defaultName, int maxChars)
+    {
+        String name;        
+        do
+        {
+            System.out.println(String.format("%s please enter a name that is no longer than %d characters, or press enter to keep the default.", defaultName, maxChars));
+            System.out.print("> ");
+            name = inputScanner.nextLine();
+            if (name.strip().length() == 0)
+            {
+                name = defaultName;
+            }
+            if (name.length() > maxChars) System.out.println("\033[1F\033[0J That name is too long, please shorten it...");
+        } while (name.length() > maxChars);
+        return name.toUpperCase();
+    }
+
     abstract protected void processInput(char input);
 }

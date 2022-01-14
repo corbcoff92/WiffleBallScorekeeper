@@ -1,6 +1,8 @@
 package wiffleballScorekeeper.game;
 
 import java.util.LinkedList;
+import static wiffleballScorekeeper.menu.Menu.getTeamName;
+
 
 public class Game
 {    
@@ -25,13 +27,13 @@ public class Game
         isTopOfInning = true;
         count = new Count();
         outs = 0;
-        awayTeam = new Team("AWAY");
-        homeTeam = new Team("HOME");
+        awayTeam = new Team(getTeamName("AWAY", 10));
+        homeTeam = new Team(getTeamName("HOME", 10));
         battingTeam = awayTeam;
         pitchingTeam = homeTeam;
         message = "Play Ball!";
         runners = new LinkedList<Integer>();
-        namePadding = Math.max(awayTeam.name.length(), homeTeam.name.length());
+        namePadding = Math.max(6,Math.max(awayTeam.name.length(), homeTeam.name.length()));
         battingTeam.newInning();
     }
     
@@ -196,7 +198,7 @@ public class Game
         char second = (runners.contains(2) ? 'X' : 'O');
         char third = (runners.contains(3) ? 'X' : 'O');
         String inningText = (isTopOfInning ? "TOP " : "BOT ") + inning;
-        System.out.println(String.format("%-" + namePadding + "s  R  H  W  |  %c  |", inningText, second));
+        System.out.println(String.format("%-" + namePadding + "s   R  H  W  |  %c  |", inningText, second));
         System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |%c   %c|", awayTeam.name, awayTeam.getRuns(), awayTeam.hits, awayTeam.walks, third, first));
         System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |  O  |", homeTeam.name, homeTeam.getRuns(), homeTeam.hits, homeTeam.walks, third, first));
         System.out.println(count.getDisplayString() + ", " + outs + (outs != 1 ? " outs" : " out"));
