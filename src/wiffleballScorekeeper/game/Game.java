@@ -32,7 +32,7 @@ public class Game
         message = "Play Ball!";
         runners = new LinkedList<Integer>();
         namePadding = Math.max(awayTeam.name.length(), homeTeam.name.length());
-        battingTeam.inningsRunsScored.add(0);
+        battingTeam.newInning();
     }
     
     public void callBall()
@@ -74,7 +74,7 @@ public class Game
                 message = (runners.size() != 3 ? "Homerun" : "Grand Slam");
                 break;
             }
-            battingTeam.hit();
+            battingTeam.hits++;
         for (int i = 0; i < runners.size(); i++)
         {
             runners.set(i, runners.get(i) +numBases);
@@ -93,7 +93,7 @@ public class Game
             i++;
         }
         runners.addFirst(1);
-        pitchingTeam.walkBatter();
+        pitchingTeam.walks++;
         checkRunnersScored();
         count.reset();
     }
@@ -156,7 +156,7 @@ public class Game
             message = (inning != NUM_INNINGS + 1 ? "Next inning" : "Extra Innings!");
         }
         runners.clear();
-        battingTeam.inningsRunsScored.add(0);
+        battingTeam.newInning();
     }
     
     private void checkGameOver()
@@ -197,8 +197,8 @@ public class Game
         char third = (runners.contains(3) ? 'X' : 'O');
         String inningText = (isTopOfInning ? "TOP " : "BOT ") + inning;
         System.out.println(String.format("%-" + namePadding + "s  R  H  W  |  %c  |", inningText, second));
-        System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |%c   %c|", awayTeam.name, awayTeam.getRuns(), awayTeam.getHits(), awayTeam.getWalks(), third, first));
-        System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |  O  |", homeTeam.name, homeTeam.getRuns(), homeTeam.getHits(), homeTeam.getWalks(), third, first));
+        System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |%c   %c|", awayTeam.name, awayTeam.getRuns(), awayTeam.hits, awayTeam.walks, third, first));
+        System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |  O  |", homeTeam.name, homeTeam.getRuns(), homeTeam.hits, homeTeam.walks, third, first));
         System.out.println(count.getDisplayString() + ", " + outs + (outs != 1 ? " outs" : " out"));
         System.out.println(message);
     } 
@@ -207,7 +207,7 @@ public class Game
     {
         String headingText = (inning <= NUM_INNINGS ? "FINAL" : "FIN/" + inning);
         headingText = String.format("%-" + namePadding + "s  | ", headingText);
-        for (int i = 1; i <= awayTeam.inningsRunsScored.size(); i++)
+        for (int i = 1; i <= awayTeam.getRunserPerInning().size(); i++)
         {
             headingText += (String.format("%-2d ",i));
         }
@@ -221,20 +221,20 @@ public class Game
         
         String awayString = String.format("%-" + namePadding + "s   | ", awayTeam.name);
         String homeString = String.format("%-" + namePadding + "s   | ", homeTeam.name);
-        for (int i=0; i < awayTeam.inningsRunsScored.size(); i++)
+        for (int i=0; i < awayTeam.getRunserPerInning().size(); i++)
         {
-            awayString += String.format("%-2d ",awayTeam.inningsRunsScored.get(i));
-            if (i < homeTeam.inningsRunsScored.size())
+            awayString += String.format("%-2d ",awayTeam.getRunserPerInning().get(i));
+            if (i < homeTeam.getRunserPerInning().size())
             {
-                homeString += String.format("%-2d ",homeTeam.inningsRunsScored.get(i));
+                homeString += String.format("%-2d ",homeTeam.getRunserPerInning().get(i));
             }
             else
             {
                 homeString += "-  ";
             }
         }
-        awayString += String.format("|%-2d %-2d %-2d", awayTeam.getRuns(), awayTeam.getHits(), awayTeam.getWalks());
-        homeString += String.format("|%-2d %-2d %-2d", homeTeam.getRuns(), homeTeam.getHits(), homeTeam.getWalks());
+        awayString += String.format("|%-2d %-2d %-2d", awayTeam.getRuns(), awayTeam.hits, awayTeam.walks);
+        homeString += String.format("|%-2d %-2d %-2d", homeTeam.getRuns(), homeTeam.hits, homeTeam.walks);
         
         System.out.println(headingText);
         System.out.println(spacingString);

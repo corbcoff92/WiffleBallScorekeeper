@@ -33,7 +33,7 @@ public class Count
     }
 
     /**
-     * Produces a formatted string representing this count that can be printed to the screen.
+     * Produces a formatted string representing this count, that can then be printed to the screen.
      * @return The formatted display string representing this count, which can be printed to the screen.
      */
     public String getDisplayString()
