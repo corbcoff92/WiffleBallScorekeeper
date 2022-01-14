@@ -1,6 +1,5 @@
 package wiffleballScorekeeper;
 
-
 import wiffleballScorekeeper.game.Game;
 import wiffleballScorekeeper.menu.GameMenu;
 import wiffleballScorekeeper.menu.MainMenu;
