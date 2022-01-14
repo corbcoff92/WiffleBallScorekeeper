@@ -1,9 +1,10 @@
-package main;
+package wiffleballScorekeeper;
 
-import game.Game;
-import menu.GameMenu;
-import menu.MainMenu;
-import menu.Menu;
+
+import wiffleballScorekeeper.game.Game;
+import wiffleballScorekeeper.menu.GameMenu;
+import wiffleballScorekeeper.menu.MainMenu;
+import wiffleballScorekeeper.menu.Menu;
 
 public class WiffleBallScorekeeper
 {

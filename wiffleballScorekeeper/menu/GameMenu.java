@@ -1,6 +1,6 @@
-package menu;
+package wiffleballScorekeeper.menu;
 
-import game.Game;
+import wiffleballScorekeeper.game.Game;
 
 public class GameMenu
 {

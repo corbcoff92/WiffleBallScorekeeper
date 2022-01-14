@@ -1,4 +1,4 @@
-package menu;
+package wiffleballScorekeeper.menu;
 
 import java.util.Scanner;
 import java.util.LinkedHashMap;

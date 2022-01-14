@@ -1,4 +1,4 @@
-package game;
+package wiffleballScorekeeper.game;
 
 import java.util.LinkedList;
 

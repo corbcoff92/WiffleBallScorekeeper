@@ -1,6 +1,6 @@
-package menu;
+package wiffleballScorekeeper.menu;
 
-import main.WiffleBallScorekeeper;
+import wiffleballScorekeeper.WiffleBallScorekeeper;
 
 public class MainMenu extends Menu
 {
