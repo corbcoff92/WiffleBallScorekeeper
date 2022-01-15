@@ -5,11 +5,8 @@ import wiffleballScorekeeper.menu.GameMenu;
 import wiffleballScorekeeper.menu.MainMenu;
 import wiffleballScorekeeper.menu.Menu;
 
-public class WiffleBallScorekeeper
+public class WiffleballScorekeeper
 {
-    private Game game;
-    private MainMenu mainMenu = new MainMenu(this);
-    public boolean exit = false;
     
     private static String promptTeamName(String defaultName)
     {
@@ -24,23 +21,20 @@ public class WiffleBallScorekeeper
         String awayTeamName = promptTeamName("AWAY");
         String homeTeamName = promptTeamName("HOME");
         int numInnings = Menu.getInt("How many innings should the game be?", 1, 9);
-        game = new Game(numInnings, homeTeamName, awayTeamName);
+        Game game = new Game(numInnings, homeTeamName, awayTeamName);
         GameMenu gameMenu = new GameMenu(game);
         gameMenu.playGame();
     }
 
-    public void run()
+    private void begin()
     {
-        while (!exit)
-        {
-            Menu.clearConsole();   
-            mainMenu.nextAction();
-        }
+        MainMenu mainMenu = new MainMenu(this);
+        mainMenu.run();
     }
 
     public static void main(String[] args) 
     {
-        WiffleBallScorekeeper wiffleBallScorekeeper = new WiffleBallScorekeeper();
-        wiffleBallScorekeeper.run();
+        WiffleballScorekeeper wiffleballScorekeeper = new WiffleballScorekeeper();
+        wiffleballScorekeeper.begin();
     }
 }
