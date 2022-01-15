@@ -4,7 +4,7 @@ import wiffleballScorekeeper.WiffleballScorekeeper;
 
 /**
  * This {@code MainMenu} class is used to control an instance of the main {@link WiffleballScorekeeper} class.
- * It inherits from the abstract base {@link Menu} class, and is used to get & process input it from the user.
+ * It inherits from the abstract base {@link Menu} class, and is used to get and process input it from the user.
  * @see Menu  
  */
 public class MainMenu extends Menu
@@ -15,7 +15,7 @@ public class MainMenu extends Menu
     /**
      * Initializes an instance that will be used to control the given {@link WiffleballScorekeeper} instance.
      * The parent constructor from {@link Menu} is used to create the options to start a new game or quit.
-     * @param scorekeeperApp
+     * @param scorekeeperApp    Instance of {@link WiffleballScorekeeper} for which this {@link Menu} should serve as a controller.
      */
     public MainMenu(WiffleballScorekeeper scorekeeperApp)
     {
@@ -24,7 +24,7 @@ public class MainMenu extends Menu
     }
 
     /**
-     * Overides the base {@link Menu} class {@link Menu.display} method to include the title of this menu.
+     * Overides the base {@link Menu} class' {@code display} method to include the title of this menu.
      */
     @Override
     protected void display()
@@ -34,7 +34,7 @@ public class MainMenu extends Menu
     }
     
     /**
-     * Implements the abstract {@link Menu.processInput} function which is used to control this 
+     * Implements the abstract {@link processInput} function which is used to control this 
      * {@code MainMenu}'s {@link WiffleballScorekeeper} instance based on the user's choices.
      */
     @Override
@@ -52,7 +52,7 @@ public class MainMenu extends Menu
     }
 
     /**
-     * Main loop used to get input from the user. Displays the menu, and then gets & processes the user's 
+     * Main loop used to get input from the user. Displays the menu, and then gets and processes the user's 
      * input using the overriden {@link processInput} method. The loop is continued until the user selects quit.
      * This loop clears the console before each prompt, creating the effect that the menu is stationary and rather 
      * than scrolling.     

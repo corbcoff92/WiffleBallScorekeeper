@@ -4,7 +4,7 @@ import wiffleballScorekeeper.game.Game;
 
 /**
  * This {@code GameMenu} class is a collection of {@link Menu}'s used to control an instance of the {@link Game} class. 
- * This class is not a menu itself, rather it contains sub-menus that are used to get & process the different types of 
+ * This class is not a menu itself, rather it contains sub-menus that are used to get and process the different types of 
  * actions that can occur during a game of wiffleball.
  */
 public class GameMenus
@@ -19,7 +19,7 @@ public class GameMenus
     /**
      * Creates an instance of the this {@code GameMenu} class that will be used to control 
      * the provided game based on the user's input. This class is not a menu itself, but 
-     * each of its sub-menus are. These sub-menus are used to get & process the different
+     * each of its sub-menus are. These sub-menus are used to get and process the different
      * types of actions that can occur during a game of wiffleball.
      * @param game  Specific instance of {@link Game} that is to be controlled by this collection of menus.
      */

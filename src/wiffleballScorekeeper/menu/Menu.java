@@ -47,7 +47,7 @@ public abstract class Menu
     }
     
     /**
-     * Prompts for, gets & processes the next valid user input, 
+     * Prompts for, gets and processes the next valid user input, 
      * using the overidden {@link processInput} method in the child class. 
      * This method continues prompting the user until a valid option is selected.
      * @see processInput
