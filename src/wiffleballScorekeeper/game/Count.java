@@ -4,16 +4,16 @@ package wiffleballScorekeeper.game;
  * The Count class is used to represent a count in wiffleball. 
  * Mainly used in the main {@link Game} class.
  */
-public class Count
+class Count
 {
     /**
      * The number of balls of this count.
      */
-    public int balls;
+    int balls;
     /**
      * The number of strikes of this count.
      */
-    public int strikes;
+    int strikes;
     
     /**
      * Initializes a blank count.

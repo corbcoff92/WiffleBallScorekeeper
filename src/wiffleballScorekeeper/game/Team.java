@@ -14,14 +14,6 @@ class Team
      */
     String name;
     /**
-     * This team's total number of runs. This member can only be through 
-     * {@link runScored} so that the {@code runsPerInning} can be concurently 
-     * update. It's value can be retreived using {@link getRuns}.
-     * @see runScored
-     * @see getRuns
-     */
-    private int runs;
-    /**
      * This team's total number of hits 
      */
     int hits;
@@ -29,15 +21,7 @@ class Team
      * This team's total number of walks
      */
     int walks;
-    /**
-     * This team's list of runs scored for each inning. 
-     * It is not directly accessibly, because its values are automatically 
-     * updated when each time {@link runScored} is called by the controlling class.
-     * {@link newInning} should be called by the controlling class for each new inning 
-     * that should be tracked. This list can be retrieved by calling {@link getRunsPerInning}.
-     * @see runScored
-     * @see getRunsPerInning
-     */
+    private int runs;
     private LinkedList<Integer> runsPerInning;
     
     /**
