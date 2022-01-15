@@ -93,21 +93,43 @@ public abstract class Menu
         return input == 'Y';
     }
 
-    public static String getTeamName(String defaultName, int maxChars)
+    public static String getString(String prompt, int maxChars)
     {
-        String name;        
+        String str;        
+        System.out.println(prompt);
         do
         {
-            System.out.println(String.format("%s please enter a name that is no longer than %d characters, or press enter to keep the default.", defaultName, maxChars));
             System.out.print("> ");
-            name = inputScanner.nextLine();
-            if (name.strip().length() == 0)
+            str = inputScanner.nextLine();
+            if (str.length() > maxChars) System.out.println(String.format("\033[1F\033[0JThat is too long, please shorten it to %d characters or less...", maxChars));
+        } while (str.length() > maxChars);
+        return str;
+    }
+    
+    public static int getInt(String prompt, int min, int max)
+    {
+        int num;        
+        System.out.println(prompt);
+        do
+        {
+            System.out.print("> ");
+            if (inputScanner.hasNextInt())
             {
-                name = defaultName;
+                num = inputScanner.nextInt();
             }
-            if (name.length() > maxChars) System.out.println("\033[1F\033[0J That name is too long, please shorten it...");
-        } while (name.length() > maxChars);
-        return name.toUpperCase();
+            else
+            {
+                inputScanner.nextLine();
+                num = min - 1;
+            }
+            if (num < min || num > max)
+            {
+                System.out.println(String.format("Invalid entry, number must be between %d and %d...", min, max));
+                num = min - 1;
+            }
+        } while (num < min || num > max);
+        inputScanner.nextLine();
+        return num;
     }
 
     abstract protected void processInput(char input);

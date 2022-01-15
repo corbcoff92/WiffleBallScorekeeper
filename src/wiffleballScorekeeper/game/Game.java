@@ -1,14 +1,15 @@
 package wiffleballScorekeeper.game;
 
 import java.util.LinkedList;
-import static wiffleballScorekeeper.menu.Menu.getTeamName;
 
 
 public class Game
-{    
-    final int NUM_INNINGS = 2;
+{   
+    public boolean isGameOver = false;
+    private boolean isTopOfInning;
+    private String message;
+    private int NUM_INNINGS; 
     private int inning;
-    boolean isTopOfInning;
     private Count count;
     private Team homeTeam;
     private Team awayTeam;
@@ -16,19 +17,17 @@ public class Game
     private Team pitchingTeam;
     private int outs;
     private LinkedList <Integer> runners;
-    String message;
-    public boolean isGameOver = false;
     private int namePadding;
-    int currentInningRuns;
     
-    public Game()
+    public Game(int numInnings, String homeTeamName, String awayTeamName)
     {
+        NUM_INNINGS = numInnings;
         inning = 1;
         isTopOfInning = true;
         count = new Count();
         outs = 0;
-        awayTeam = new Team(getTeamName("AWAY", 10));
-        homeTeam = new Team(getTeamName("HOME", 10));
+        awayTeam = new Team(awayTeamName);
+        homeTeam = new Team(homeTeamName);
         battingTeam = awayTeam;
         pitchingTeam = homeTeam;
         message = "Play Ball!";
@@ -197,8 +196,9 @@ public class Game
         char first = (runners.contains(1) ? 'X' : 'O');
         char second = (runners.contains(2) ? 'X' : 'O');
         char third = (runners.contains(3) ? 'X' : 'O');
-        String inningText = (isTopOfInning ? "TOP " : "BOT ") + inning;
-        System.out.println(String.format("%-" + namePadding + "s   R  H  W  |  %c  |", inningText, second));
+        
+        System.out.println(String.format("%d inning game", NUM_INNINGS));
+        System.out.println(String.format("%-" + namePadding + "s   R  H  W  |  %c  |", (isTopOfInning ? "TOP " : "BOT ") + inning, second));
         System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |%c   %c|", awayTeam.name, awayTeam.getRuns(), awayTeam.hits, awayTeam.walks, third, first));
         System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |  O  |", homeTeam.name, homeTeam.getRuns(), homeTeam.hits, homeTeam.walks, third, first));
         System.out.println(count.getDisplayString() + ", " + outs + (outs != 1 ? " outs" : " out"));
@@ -221,8 +221,8 @@ public class Game
             spacingString += '-';
         }
         
-        String awayString = String.format("%-" + namePadding + "s   | ", awayTeam.name);
-        String homeString = String.format("%-" + namePadding + "s   | ", homeTeam.name);
+        String awayString = String.format("%-" + namePadding + "s  | ", awayTeam.name);
+        String homeString = String.format("%-" + namePadding + "s  | ", homeTeam.name);
         for (int i=0; i < awayTeam.getRunserPerInning().size(); i++)
         {
             awayString += String.format("%-2d ",awayTeam.getRunserPerInning().get(i));
