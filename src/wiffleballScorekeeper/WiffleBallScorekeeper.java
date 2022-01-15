@@ -1,9 +1,8 @@
 package wiffleballScorekeeper;
 
 import wiffleballScorekeeper.game.Game;
-import wiffleballScorekeeper.menu.GameMenu;
 import wiffleballScorekeeper.menu.MainMenu;
-import wiffleballScorekeeper.menu.Menu;
+import wiffleballScorekeeper.menu.GameMenus;
 
 public class WiffleballScorekeeper
 {
@@ -20,10 +19,10 @@ public class WiffleballScorekeeper
     {
         String awayTeamName = promptTeamName("AWAY");
         String homeTeamName = promptTeamName("HOME");
-        int numInnings = Menu.getInt("How many innings should the game be?", 1, 9);
+        int numInnings = wiffleballScorekeeper.menu.Menu.getInt("How many innings should the game be?", 1, 9);
         Game game = new Game(numInnings, homeTeamName, awayTeamName);
-        GameMenu gameMenu = new GameMenu(game);
-        gameMenu.playGame();
+        GameMenus gameMenus = new GameMenus(game);
+        gameMenus.playGame();
     }
 
     private void begin()
