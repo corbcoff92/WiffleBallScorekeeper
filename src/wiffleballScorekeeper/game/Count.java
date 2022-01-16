@@ -24,6 +24,17 @@ class Count
     }
 
     /**
+     * This constructor is a copy constructor, which provides a way to create a copy of the given existing 
+     * {@link Count} instance.
+     * @param count  Count instance that is to be copied.
+     */
+    public Count(final Count count)
+    {
+        this.balls = count.balls;
+        this.strikes = count.strikes;
+    }
+
+    /**
      * Resets the balls and strikes of this count to zero.
      */
     public void reset()

@@ -38,6 +38,20 @@ class Team
         walks = 0;
         runsPerInning = new LinkedList<Integer>();
     }
+    
+    /**
+     * This constructor is a copy constructor, which provides a way to create a copy of the given existing 
+     * {@link Team} instance.
+     * @param team  Team instance that is to be copied.
+     */
+    public Team(final Team team)
+    {
+        this.name = team.name;
+        this.runs = team.runs;
+        this.hits = team.hits;
+        this.walks = team.walks;
+        this.runsPerInning = new LinkedList<Integer>(team.runsPerInning);
+    }
 
     /**
      * Implemenation of this team scoring a run.

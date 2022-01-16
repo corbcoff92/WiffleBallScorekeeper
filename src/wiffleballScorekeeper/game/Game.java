@@ -8,25 +8,26 @@ import java.util.LinkedList;
  * the {@link wiffleballScorekeeper.game} package.
  */
 public class Game
-{   
+{  
     /**
      * Boolean flag indicating whether or not this game has ended.
      */
     public boolean isGameOver = false;
     
-    // Private members
-    private boolean isTopOfInning;
-    private String message;
-    private int NUM_INNINGS; 
-    private int inning;
-    private Count count;
-    private Team homeTeam;
-    private Team awayTeam;
-    private Team battingTeam;
-    private Team pitchingTeam;
-    private int outs;
-    private LinkedList <Integer> runners;
-    private int namePadding;
+    // Package private members
+    boolean isTopOfInning;
+    String message;
+    int NUM_INNINGS; 
+    int inning;
+    Count count;
+    Team homeTeam;
+    Team awayTeam;
+    Team battingTeam;
+    Team pitchingTeam;
+    int outs;
+    LinkedList <Integer> runners;
+    int namePadding;
+    private StateStack stateStack = new StateStack(this);
     
     /**
      * Initializes a newly started game against the provided team names, that will last the given number of innings. 
@@ -63,8 +64,9 @@ public class Game
      */
     public void callBall()
     {
-        count.balls++;
         message = "Ball";      
+        stateStack.logState();
+        count.balls++;
         
         // Check if batter has walked, and 
         // if so, advance the runner(s)
@@ -83,8 +85,9 @@ public class Game
      */
     public void callStrike()
     {
-        count.strikes++;
         message = "Strike";      
+        stateStack.logState();
+        count.strikes++;
         if (count.checkStrikeout())
         {
             message = "Struckout";
@@ -104,20 +107,21 @@ public class Game
         switch (numBases)
         {
             case 1:
-                message = "Single";
-                break;
+            message = "Single";
+            break;
             case 2:
-                message = "Double";
-                break;
+            message = "Double";
+            break;
             case 3:
-                message = "Triple";
-                break;
+            message = "Triple";
+            break;
             case 4:
-                // If the bases were loaded, the homerun is a grand slam!
-                message = (runners.size() != 3 ? "Homerun" : "Grand Slam");
-                break;
-            }
-            battingTeam.hits++;
+            // If the bases were loaded, the homerun is a grand slam!
+            message = (runners.size() != 3 ? "Homerun" : "Grand Slam");
+            break;
+        }
+        stateStack.logState();
+        battingTeam.hits++;
 
         // Advance each runner already on base
         for (int i = 0; i < runners.size(); i++)
@@ -190,6 +194,7 @@ public class Game
     public void flyOut()
     {
         message = "Flyout";
+        stateStack.logState();
         outMade();
     }
     
@@ -202,6 +207,7 @@ public class Game
     public void groundOut()
     {
         message = "Groundout";
+        stateStack.logState();
         outMade();
     }
     
@@ -369,5 +375,14 @@ public class Game
         System.out.println(homeString);
         System.out.println(spacingString);
         System.out.println("");
+    }
+    
+    /**
+     * Adjusts this game's state to the last state added to the {@link StateStack}. 
+     * This creates the effect of undoing the previous action.
+     */
+    public void loadLastState()
+    {
+        stateStack.loadLastState();
     }
 }

@@ -14,6 +14,7 @@ public class GameMenus
     private PitchMenu pitchMenu = new PitchMenu();
     private HitMenu hitMenu = new HitMenu();
     private OutMenu outMenu = new OutMenu();
+    private GameOverMenu gameOverMenu = new GameOverMenu();
     private Menu currentMenu = pitchMenu;
 
     /**
@@ -38,23 +39,24 @@ public class GameMenus
     public void playGame()
     {
         // Continue until game ends or user selects to quit
-        while (!quit && !game.isGameOver)
+        while (!quit || !game.isGameOver)
         {
             Menu.clearConsole();
             game.display();
             currentMenu.nextAction();
+            
+            // If the game was played in its entirety, 
+            // display the final results
+            if (game.isGameOver)
+            {
+                Menu.clearConsole();
+                game.display();
+                System.out.println("");
+                game.displayFinal();
+                gameOverMenu.nextAction();
+            }
         }
-        // If the game was played in its entirety, 
-        // display the final results
-        if (game.isGameOver)
-        {
-            Menu.clearConsole();
-            game.display();
-            System.out.println("");
-            game.displayFinal();
-            System.out.println("Game Over");
-            Menu.waitForEnter();
-        }
+        
     }
 
     /**
@@ -77,7 +79,7 @@ public class GameMenus
          */
         public PitchMenu()
         {
-            super("B - Ball", "S - Strike", "H - Hit", "O - Out", "Q - Quit");
+            super("B - Ball", "S - Strike", "H - Hit", "O - Out", "U - Undo", "Q - Quit");
         }
         
         /** 
@@ -92,20 +94,35 @@ public class GameMenus
             switch (input)
             {
                 case 'B':
-                game.callBall();
-                break;
+                {
+                    game.callBall();
+                    break;
+                }
                 case 'S':
-                game.callStrike();
-                break;
+                {
+                    game.callStrike();
+                    break;
+                }
                 case 'H':
-                currentMenu = hitMenu;
-                break;   
+                {
+                    currentMenu = hitMenu;
+                    break;   
+                }
                 case 'O':
-                currentMenu = outMenu;
-                break;
+                {
+                    currentMenu = outMenu;
+                    break;
+                }
+                case 'U':
+                {
+                    game.loadLastState();
+                    break;
+                }
                 case 'Q':
-                quit = askYesNo("Are you sure you want to quit?");
-                break;
+                {
+                    quit = askYesNo("Are you sure you want to quit?");
+                    break;
+                }
             }
         }
     }
@@ -198,15 +215,54 @@ public class GameMenus
             switch (input)
             {
                 case 'F':
-                    game.flyOut();
-                    break;
+                game.flyOut();
+                break;
                 case 'G':
-                    game.groundOut();
-                    break;
+                game.groundOut();
+                break;
                 case 'C':
-                    break;
+                break;
             }
             currentMenu = pitchMenu;
+        }
+    }
+    
+    /**
+     * This menu is used at the end of a game to determine if the user would like to undo the last action, 
+     * or continue to the main menu.The input is processed based on the option that the user selects. This 
+     * class directly extends the abstract base {@link Menu} class.
+     * @see Menu
+     */
+    private class GameOverMenu extends Menu
+    {
+        /**
+         * Initializes a {@link Menu} with the options to undo the last action, 
+         * or continue to the main menu. 
+         */
+        public GameOverMenu()
+        {
+            super("U - Undo last action", "C - Continue to main menu");
+        }
+        
+        /** 
+         * Implements the abstract {@link Menu.processInput} function which is used to control this 
+         * collection of {@code GameMenus}'s {@link Game} instance based on the user's choices. If 
+         * the user selects "Undo", the last game action is undone and they are returned to the 
+         * main pitch menu to continue the game from the previous state. This helps to if the user 
+         * made a mistake selecting the last action of the game.
+         */
+        protected void processInput(char input)
+        {
+            switch (input)
+            {
+                case 'U':
+                    game.loadLastState();
+                    currentMenu = pitchMenu;
+                    break;
+                case 'C':
+                    quit = true;
+                    break;
+            }
         }
     }
 }
