@@ -20,7 +20,6 @@ This software was written to assist & demonstrate the learning of the basics of 
 * [How to Write Doc Comments for the Javadoc Tool](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html) (Official/Tutorial Site)
 
 # Future Work
-* Document comments:
-    - StateStack class
+* Develop into mobile application
 * Ability to save games for later
-* Possibly optimize code implementing undo functionality
+* Possible optimization of undo functionality implementation

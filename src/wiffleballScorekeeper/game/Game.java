@@ -406,9 +406,9 @@ public class Game
     
     /**
      * Implementation of an action being undone, by setting this game's attributes using the given game's attributes contained 
-     * in the {@link Map}. The provided map contains the name of the action being undone, and a the {@link Game} option 
+     * in the {@link HashMap}. The provided map contains the name of the action being undone, and a the {@link Game} option 
      * from which the attributes should be set.  
-     * @param state     Map containing a String indicating the action that is being undone, and an instance of {@Game} 
+     * @param state     Map containing a String indicating the action that is being undone, and an instance of {@link Game} 
      *                  indicating the state of the game before the action occured. The current game's attributes are 
      *                  set using the game instance provided in the map. 
      */
