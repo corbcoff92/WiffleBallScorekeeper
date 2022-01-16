@@ -1,6 +1,8 @@
 package wiffleballScorekeeper.menu;
 
+import wiffleballScorekeeper.WiffleballScorekeeper;
 import wiffleballScorekeeper.game.Game;
+import java.util.HashMap;
 
 /**
  * This {@code GameMenu} class is a collection of {@link Menu}'s used to control an instance of the {@link Game} class. 
@@ -10,6 +12,7 @@ import wiffleballScorekeeper.game.Game;
 public class GameMenus
 {
     private Game game;
+    private WiffleballScorekeeper wiffleballScorekeeperApp;
     private boolean quit = false;
     private PitchMenu pitchMenu = new PitchMenu();
     private HitMenu hitMenu = new HitMenu();
@@ -21,12 +24,18 @@ public class GameMenus
      * Creates an instance of the this {@code GameMenu} class that will be used to control 
      * the provided game based on the user's input. This class is not a menu itself, but 
      * each of its sub-menus are. These sub-menus are used to get and process the different
-     * types of actions that can occur during a game of wiffleball.
-     * @param game  Specific instance of {@link Game} that is to be controlled by this collection of menus.
+     * types of actions that can occur during a game of wiffleball. This collection of menus
+     * also provides the link between the current {@link Game} instance, and the Wiffleball 
+     * Scorekeeper App.
+     * @param game                      Specific instance of {@link Game} that is to be controlled by this 
+     *                                  collection of menus.
+     * @param wiffleballScorekeeperApp  Specific instance of {@link WiffleballScorekeeper} to which this 
+     *                                  collection of menu's belongs.
      */
-    public GameMenus(Game game)
+    public GameMenus(Game game, WiffleballScorekeeper wiffleballScorekeeperApp)
     {
         this.game = game;
+        this.wiffleballScorekeeperApp = wiffleballScorekeeperApp;
     }
 
     /**
@@ -39,7 +48,7 @@ public class GameMenus
     public void playGame()
     {
         // Continue until game ends or user selects to quit
-        while (!quit || !game.isGameOver)
+        while (!quit && !game.isGameOver)
         {
             Menu.clearConsole();
             game.display();
@@ -74,7 +83,8 @@ public class GameMenus
          * <li>B - Ball</li> 
          * <li>S - Strike</li> 
          * <li>H - Hit</li> 
-         * <li>O - Out</li> 
+         * <li>O - Out</li>
+         * <li>U - Undo</li> 
          * <li>Q - Quit</li> 
          */
         public PitchMenu()
@@ -95,11 +105,13 @@ public class GameMenus
             {
                 case 'B':
                 {
+                    wiffleballScorekeeperApp.storeGameState("Ball", game);
                     game.callBall();
                     break;
                 }
                 case 'S':
                 {
+                    wiffleballScorekeeperApp.storeGameState("Strike", game);
                     game.callStrike();
                     break;
                 }
@@ -115,7 +127,12 @@ public class GameMenus
                 }
                 case 'U':
                 {
-                    game.loadLastState();
+                    HashMap<String, Game> state = wiffleballScorekeeperApp.getLastStackedState();
+                    if (state != null)
+                    {
+                        currentMenu = pitchMenu;
+                        game.undo(state);
+                    }
                     break;
                 }
                 case 'Q':
@@ -164,17 +181,29 @@ public class GameMenus
             switch (input)
             {
                 case '1':
-                game.advanceRunnersHit(1);
-                break;
+                {
+                    wiffleballScorekeeperApp.storeGameState("Single", game);
+                    game.advanceRunnersHit(1);
+                    break;
+                }
                 case '2':
-                game.advanceRunnersHit(2);
-                break;
+                {
+                    wiffleballScorekeeperApp.storeGameState("Double", game);
+                    game.advanceRunnersHit(2);
+                    break;
+                }
                 case '3':
-                game.advanceRunnersHit(3);
-                break;
+                {
+                    wiffleballScorekeeperApp.storeGameState("Triple", game);
+                    game.advanceRunnersHit(3);
+                    break;
+                }
                 case '4':
-                game.advanceRunnersHit(4);    
-                break;
+                {
+                    wiffleballScorekeeperApp.storeGameState("Homerun", game);
+                    game.advanceRunnersHit(4);    
+                    break;
+                }
             }
             currentMenu = pitchMenu;
         }
@@ -215,13 +244,21 @@ public class GameMenus
             switch (input)
             {
                 case 'F':
-                game.flyOut();
-                break;
+                {
+                    wiffleballScorekeeperApp.storeGameState("Flyout", game);
+                    game.flyOut();
+                    break;
+                }
                 case 'G':
-                game.groundOut();
-                break;
+                {
+                    wiffleballScorekeeperApp.storeGameState("Groundout", game);
+                    game.groundOut();
+                    break;
+                }
                 case 'C':
-                break;
+                {
+                    break;
+                }
             }
             currentMenu = pitchMenu;
         }
@@ -256,8 +293,12 @@ public class GameMenus
             switch (input)
             {
                 case 'U':
-                    game.loadLastState();
-                    currentMenu = pitchMenu;
+                    HashMap<String, Game> state = wiffleballScorekeeperApp.getLastStackedState();
+                    if (state != null)
+                    {
+                        currentMenu = pitchMenu;
+                        game.undo(state);
+                    }
                     break;
                 case 'C':
                     quit = true;

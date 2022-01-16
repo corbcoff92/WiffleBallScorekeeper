@@ -1,6 +1,7 @@
 package wiffleballScorekeeper.game;
 
 import java.util.LinkedList;
+import java.util.HashMap;
 
 /**
  * This main {@code Game} class is a representation of a game of wiffleball. 
@@ -8,26 +9,24 @@ import java.util.LinkedList;
  * the {@link wiffleballScorekeeper.game} package.
  */
 public class Game
-{  
+{      
     /**
      * Boolean flag indicating whether or not this game has ended.
      */
     public boolean isGameOver = false;
     
     // Package private members
-    boolean isTopOfInning;
-    String message;
-    int NUM_INNINGS; 
-    int inning;
-    Count count;
-    Team homeTeam;
-    Team awayTeam;
-    Team battingTeam;
-    Team pitchingTeam;
-    int outs;
-    LinkedList <Integer> runners;
-    int namePadding;
-    private StateStack stateStack = new StateStack(this);
+    private boolean isTopOfInning;
+    private String message;
+    private int NUM_INNINGS; 
+    private int inning;
+    private Count count;
+    private Team homeTeam;
+    private Team awayTeam;
+    private Team battingTeam;
+    private Team pitchingTeam;
+    private int outs;
+    private LinkedList <Integer> runners;
     
     /**
      * Initializes a newly started game against the provided team names, that will last the given number of innings. 
@@ -49,11 +48,41 @@ public class Game
         pitchingTeam = homeTeam;
         message = "Play Ball!";
         runners = new LinkedList<Integer>();
-        namePadding = Math.max(6,Math.max(awayTeam.name.length(), homeTeam.name.length()));
 
         // Call new inning for the away team so that it 
         // can be tracked from the beginning of the game
         battingTeam.newInning();
+    }
+
+    /**
+     * This constructor is a copy constructor, and provides a way to create a copy of the given existing 
+     * {@link Game} instance.
+     * @param game  Game instance that is to be copied.
+     */
+    public Game(final Game game)
+    {
+        isGameOver = game.isGameOver;    
+        isTopOfInning = game.isTopOfInning;
+        message = game.message;
+        NUM_INNINGS = game.NUM_INNINGS; 
+        inning = game.inning;
+        // Must create copies of Counts, Teams, and LinkedLists
+        // because they are references to objects.
+        count = new Count(game.count);
+        battingTeam = new Team(game.battingTeam);
+        pitchingTeam = new Team(game.pitchingTeam);
+        if (game.homeTeam == game.battingTeam)
+        {
+            homeTeam = battingTeam;
+            awayTeam = pitchingTeam;
+        }
+        else
+        {
+            homeTeam = pitchingTeam;
+            awayTeam = battingTeam;
+        }
+        outs = game.outs;
+        runners = new LinkedList<Integer>(game.runners);
     }
     
     /**
@@ -65,7 +94,6 @@ public class Game
     public void callBall()
     {
         message = "Ball";      
-        stateStack.logState();
         count.balls++;
         
         // Check if batter has walked, and 
@@ -86,7 +114,6 @@ public class Game
     public void callStrike()
     {
         message = "Strike";      
-        stateStack.logState();
         count.strikes++;
         if (count.checkStrikeout())
         {
@@ -120,7 +147,6 @@ public class Game
             message = (runners.size() != 3 ? "Homerun" : "Grand Slam");
             break;
         }
-        stateStack.logState();
         battingTeam.hits++;
 
         // Advance each runner already on base
@@ -194,7 +220,6 @@ public class Game
     public void flyOut()
     {
         message = "Flyout";
-        stateStack.logState();
         outMade();
     }
     
@@ -207,7 +232,6 @@ public class Game
     public void groundOut()
     {
         message = "Groundout";
-        stateStack.logState();
         outMade();
     }
     
@@ -305,6 +329,7 @@ public class Game
      */
     public void display()
     {
+        final int NAME_PADDING = Math.max(6, Math.max(homeTeam.name.length(), awayTeam.name.length()));
         // Determine runners on base
         char first = (runners.contains(1) ? 'X' : 'O');
         char second = (runners.contains(2) ? 'X' : 'O');
@@ -312,9 +337,9 @@ public class Game
         
         // Print scoreboard
         System.out.println(String.format("%d inning game", NUM_INNINGS));
-        System.out.println(String.format("%-" + namePadding + "s   R  H  W  |  %c  |", (isTopOfInning ? "TOP " : "BOT ") + inning, second));
-        System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |%c   %c|", awayTeam.name, awayTeam.getRuns(), awayTeam.hits, awayTeam.walks, third, first));
-        System.out.println(String.format("%-" +  namePadding + "s   %-2d %-2d %-2d |  O  |", homeTeam.name, homeTeam.getRuns(), homeTeam.hits, homeTeam.walks, third, first));
+        System.out.println(String.format("%-" + NAME_PADDING + "s   R  H  W  |  %c  |", (isTopOfInning ? "TOP " : "BOT ") + inning, second));
+        System.out.println(String.format("%-" +  NAME_PADDING + "s   %-2d %-2d %-2d |%c   %c|", awayTeam.name, awayTeam.getRuns(), awayTeam.hits, awayTeam.walks, third, first));
+        System.out.println(String.format("%-" +  NAME_PADDING + "s   %-2d %-2d %-2d |  O  |", homeTeam.name, homeTeam.getRuns(), homeTeam.hits, homeTeam.walks, third, first));
         System.out.println(count.getDisplayString() + ", " + outs + (outs != 1 ? " outs" : " out"));
         System.out.println(message);
     } 
@@ -326,10 +351,12 @@ public class Game
      */
     public void displayFinal()
     {
+        final int NAME_PADDING = Math.max(6, Math.max(homeTeam.name.length(), awayTeam.name.length()));
+
         // Produce formatted heading string //
         // Final state for extra innings if needed
         String headingText = (inning <= NUM_INNINGS ? "FINAL" : "FIN/" + inning);
-        headingText = String.format("%-" + namePadding + "s  | ", headingText);
+        headingText = String.format("%-" + NAME_PADDING + "s  | ", headingText);
         // Add inning headings
         for (int i = 1; i <= awayTeam.getRunserPerInning().size(); i++)
         {
@@ -347,8 +374,8 @@ public class Game
         
         // Produce boxscore strings for each team //
         // Add team names
-        String awayString = String.format("%-" + namePadding + "s  | ", awayTeam.name);
-        String homeString = String.format("%-" + namePadding + "s  | ", homeTeam.name);
+        String awayString = String.format("%-" + NAME_PADDING + "s  | ", awayTeam.name);
+        String homeString = String.format("%-" + NAME_PADDING + "s  | ", homeTeam.name);
         // Add runs per inning
         for (int i=0; i < awayTeam.getRunserPerInning().size(); i++)
         {
@@ -378,11 +405,37 @@ public class Game
     }
     
     /**
-     * Adjusts this game's state to the last state added to the {@link StateStack}. 
-     * This creates the effect of undoing the previous action.
+     * Implementation of an action being undone, by setting this game's attributes using the given game's attributes contained 
+     * in the {@link Map}. The provided map contains the name of the action being undone, and a the {@link Game} option 
+     * from which the attributes should be set.  
+     * @param state     Map containing a String indicating the action that is being undone, and an instance of {@Game} 
+     *                  indicating the state of the game before the action occured. The current game's attributes are 
+     *                  set using the game instance provided in the map. 
      */
-    public void loadLastState()
+    public void undo(final HashMap<String, Game> state)
     {
-        stateStack.loadLastState();
+        String action = state.keySet().iterator().next();
+        Game game = state.get(action);
+
+        isGameOver = game.isGameOver;    
+        isTopOfInning = game.isTopOfInning;
+        message = "Undo: " + action;
+        NUM_INNINGS = game.NUM_INNINGS; 
+        inning = game.inning;
+        count = game.count;
+        battingTeam = game.battingTeam;
+        pitchingTeam = game.pitchingTeam;
+        if (game.homeTeam == game.battingTeam)
+        {
+            homeTeam = game.battingTeam;
+            awayTeam = game.pitchingTeam;
+        }
+        else
+        {
+            homeTeam = game.pitchingTeam;
+            awayTeam = game.battingTeam;
+        }
+        outs = game.outs;
+        runners = game.runners;
     }
 }
