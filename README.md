@@ -3,9 +3,9 @@ This software is a console-based application that acts as a scoreboard for a gam
 
 The documentation was created using Javadocs and document comments. This documentation can be found here: [Wiffleball Scorekeeper Documentation](./documentation/html/index.html)
 
-This software was written to assist & demonstrate the learning of the fundamentals of the Java programming language. These include the use/syntax of variables, expressions, conditionals, loops, functions classes and data structures (specifically <code>LinkedLists</code> & <code>LinkedHashMaps</code>). It also demonstrates the use of slightly more complex concepts such as inheritance using the <code>extends</code> keyword. 
+This software was written to assist with and demonstrate the learning of the fundamentals of the Java programming language. These include the use/syntax of variables, expressions, conditionals, loops, functions classes and data structures (specifically <code>LinkedLists</code> & <code>LinkedHashMaps</code>). It also demonstrates the use of slightly more complex concepts such as inheritance using the <code>extends</code> keyword. 
 
-{A link to a 4-5 minute YouTube demonstration of the software running and a walkthrough of the code, focusing on sharing what I learned about the language syntax will be provided here: [Software Demo Video](http://youtube.link.goes.here)}
+An overview of the Java programming language basic elements and a demonstration of the Wiffleball Scorekeeper program can be found here: [Demonstration of the Java Programming Language Basic Elements](https://youtu.be/4SbYktCSE8c)
 
 # Development Environment
 * Java 17.0.1
